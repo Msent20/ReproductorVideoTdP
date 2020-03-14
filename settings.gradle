@@ -1,0 +1,2 @@
+rootProject.name='ReproductorVideo'
+include ':app'
