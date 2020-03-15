@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.reproductorvideo.ActividadDelReproductor;
 import com.example.reproductorvideo.R;
+import com.example.reproductorvideo.contenedorVideo;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -27,10 +28,12 @@ import Interfaz.ClickListenner;
 import Model.VideoModel;
 
 public class VideoItemAdapter extends RecyclerView.Adapter {
+    contenedorVideo contenedor;
     List<VideoModel> videoModelList= new ArrayList<>();
     Context contexto;
     ClickListenner clickListenner;
-    public VideoItemAdapter(List<VideoModel> videoModelList, Context contexto, ClickListenner clickListenner) {
+    public VideoItemAdapter(contenedorVideo contenedor,List<VideoModel> videoModelList, Context contexto, ClickListenner clickListenner) {
+        this.contenedor=contenedor;
         this.videoModelList = videoModelList;
         this.contexto = contexto;
         this.clickListenner = clickListenner;
