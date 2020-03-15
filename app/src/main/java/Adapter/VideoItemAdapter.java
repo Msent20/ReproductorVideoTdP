@@ -3,6 +3,7 @@ package Adapter;
 import android.content.Context;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -26,12 +28,12 @@ import Model.VideoModel;
 
 public class VideoItemAdapter extends RecyclerView.Adapter {
     contenedorVideo contenedor;
-    List<VideoModel> videoModelList= new ArrayList<>();
+    List<VideoModel> videoModelList;
     Context contexto;
     ClickListenner clickListenner;
-    public VideoItemAdapter(contenedorVideo contenedor,List<VideoModel> videoModelList, Context contexto, ClickListenner clickListenner) {
+    public VideoItemAdapter(contenedorVideo contenedor, Context contexto, ClickListenner clickListenner) {
         this.contenedor=contenedor;
-        this.videoModelList = videoModelList;
+        this.videoModelList = contenedor.ordenarNormal();
         this.contexto = contexto;
         this.clickListenner = clickListenner;
     }
@@ -106,6 +108,14 @@ public class VideoItemAdapter extends RecyclerView.Adapter {
         });
 
 
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public void ordenarPorVistas(){
+        videoModelList= contenedor.ordenarVisitas();
+    }
+    public void ordenarNormal(){
+        videoModelList= contenedor.ordenarNormal();
     }
 
     @Override

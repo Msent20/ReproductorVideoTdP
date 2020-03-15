@@ -19,6 +19,7 @@ import Model.VideoModel;
 public class contenedorVideo {
     private ArrayList<String> contenedor;
     private ViewsAdapter viewsAdapter;
+    private List<VideoModel> listaModel;
 
     public contenedorVideo(){
         viewsAdapter= new ViewsAdapter();
@@ -56,7 +57,6 @@ public class contenedorVideo {
     public List<VideoModel> ordenarVisitas(){
         ArrayList<String> masVisitados= viewsAdapter.masVistos();
 
-
         List<VideoModel> videoModel= new ArrayList<VideoModel>();
         for(String ruta: masVisitados){
             File file= new File(ruta);
@@ -76,6 +76,7 @@ public class contenedorVideo {
     public void leerDatos(SharedPreferences datos){
         viewsAdapter.leerDatos(datos);
     }
+
 
 
 }

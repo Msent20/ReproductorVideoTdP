@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -39,9 +40,8 @@ public class MainActivity extends AppCompatActivity implements ClickListenner {
 
     private static final int PERMISSION_CODE = 101;
     RecyclerView video_list;
-    private static List<String> archivos=new ArrayList<>();
     private contenedorVideo contVid;
-
+    private VideoItemAdapter videoItemAdapter;
     private Spinner spinner;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -53,8 +53,9 @@ public class MainActivity extends AppCompatActivity implements ClickListenner {
         video_list= findViewById(R.id.video_list);
         contVid= new contenedorVideo();
         spinner= findViewById(R.id.cambiarVistas);
-        SharedPreferences settings = getSharedPreferences("DatosVisitas", 0);
+        SharedPreferences settings = getSharedPreferences("DatosVisitas", Context.MODE_PRIVATE);
         contVid.leerDatos(settings);
+
 
         //Si la version de andriod es mayor a la 6 pregunta por los permisos
         if(Build.VERSION.SDK_INT>=23){
@@ -66,6 +67,8 @@ public class MainActivity extends AppCompatActivity implements ClickListenner {
         }else{
             readVideos();
         }
+        videoItemAdapter = new VideoItemAdapter(contVid,MainActivity.this,MainActivity.this);
+
 
 
         String[] opciones= {"Normal","Mas vistos"};
@@ -96,7 +99,7 @@ public class MainActivity extends AppCompatActivity implements ClickListenner {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        SharedPreferences settings = getSharedPreferences("DatosVisitas", 0);
+        SharedPreferences settings = getSharedPreferences("DatosVisitas", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = settings.edit();
         contVid.guardarDatos(editor);
         editor.commit();
@@ -118,21 +121,20 @@ public class MainActivity extends AppCompatActivity implements ClickListenner {
         }
 
         video_list.setLayoutManager(new LinearLayoutManager(MainActivity.this));
-        List<VideoModel> videoModellist= contVid.readAllFiles(hashSet);
 
-        VideoItemAdapter videoItemAdapter = new VideoItemAdapter(contVid,videoModellist,MainActivity.this,MainActivity.this);
+
+
         video_list.setAdapter(videoItemAdapter);
+
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void listadoPorVisitas() {
-        VideoItemAdapter via= new VideoItemAdapter(contVid,contVid.ordenarVisitas(),MainActivity.this,MainActivity.this);
-        video_list.setAdapter(via);
+        videoItemAdapter.ordenarPorVistas();
     }
 
     private void listadoNormal(){
-        VideoItemAdapter via= new VideoItemAdapter(contVid,contVid.ordenarNormal(),MainActivity.this,MainActivity.this);
-        video_list.setAdapter(via);
+        videoItemAdapter.ordenarNormal();
     }
 
 

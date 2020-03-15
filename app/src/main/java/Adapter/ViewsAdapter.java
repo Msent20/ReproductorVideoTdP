@@ -37,6 +37,8 @@ public class ViewsAdapter {
       return views.get(rutaArch);
   }
 
+
+
   //Metodo que crea una lista ordenada con las rutas de los videos mas vistos
   @RequiresApi(api = Build.VERSION_CODES.N)
   public static ArrayList<String> masVistos(){
@@ -53,8 +55,7 @@ public class ViewsAdapter {
   }
   // Guarda los datos de las visitas cuando se cierra la app
   public void guardarDatos(SharedPreferences.Editor datos){
-      List<Map.Entry<String , Integer>> list = new ArrayList<Map.Entry<String, Integer>>(views.entrySet());
-      for(Map.Entry<String,Integer> ent:list) {
+      for(Map.Entry<String,Integer> ent:views.entrySet()) {
           datos.putInt(ent.getKey(),ent.getValue());
       }
   }
@@ -65,7 +66,7 @@ public class ViewsAdapter {
 
       Map<String,?> aux=datos.getAll();
       for(Map.Entry<String,?> ent: aux.entrySet()){
-          views.replace(ent.getKey(),(Integer)ent.getValue());
+          views.put(ent.getKey(),(Integer)ent.getValue());
       }
   }
 
