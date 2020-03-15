@@ -1,6 +1,7 @@
 package com.example.reproductorvideo;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -9,12 +10,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -39,14 +42,20 @@ public class MainActivity extends AppCompatActivity implements ClickListenner {
     private static List<String> archivos=new ArrayList<>();
     private contenedorVideo contVid;
 
-    private static Spinner spinner;
+    private Spinner spinner;
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         getSupportActionBar().hide();
         video_list= findViewById(R.id.video_list);
+        contVid= new contenedorVideo();
+        spinner= findViewById(R.id.cambiarVistas);
+        SharedPreferences settings = getSharedPreferences("DatosVisitas", 0);
+        contVid.leerDatos(settings);
+
         //Si la version de andriod es mayor a la 6 pregunta por los permisos
         if(Build.VERSION.SDK_INT>=23){
             if(checkPermission()) {
@@ -57,16 +66,40 @@ public class MainActivity extends AppCompatActivity implements ClickListenner {
         }else{
             readVideos();
         }
-        /*spinner= findViewById(R.id.cambiarVistas);
+
+
         String[] opciones= {"Normal","Mas vistos"};
         ArrayAdapter<String> adap= new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,opciones);
         spinner.setAdapter(adap);
-        if (spinner.getSelectedItem().toString().equals("Normal")){
-            listadoNormal();
-        }else{
-            listadoPorVisitas();
-        }
-        */
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (spinner.getSelectedItem().toString().equals("Mas vistos")){
+                    listadoPorVisitas();
+                }else{
+                    if (spinner.getSelectedItem().toString().equals("Normal"))
+                        listadoNormal();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                listadoNormal();
+            }
+        });
+
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        SharedPreferences settings = getSharedPreferences("DatosVisitas", 0);
+        SharedPreferences.Editor editor = settings.edit();
+        contVid.guardarDatos(editor);
+        editor.commit();
     }
 
     private void readVideos(){
@@ -83,6 +116,7 @@ public class MainActivity extends AppCompatActivity implements ClickListenner {
         }catch (Exception e){
             e.printStackTrace();
         }
+
         video_list.setLayoutManager(new LinearLayoutManager(MainActivity.this));
         List<VideoModel> videoModellist= contVid.readAllFiles(hashSet);
 
@@ -90,6 +124,7 @@ public class MainActivity extends AppCompatActivity implements ClickListenner {
         video_list.setAdapter(videoItemAdapter);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     private void listadoPorVisitas() {
         VideoItemAdapter via= new VideoItemAdapter(contVid,contVid.ordenarVisitas(),MainActivity.this,MainActivity.this);
         video_list.setAdapter(via);
@@ -99,8 +134,6 @@ public class MainActivity extends AppCompatActivity implements ClickListenner {
         VideoItemAdapter via= new VideoItemAdapter(contVid,contVid.ordenarNormal(),MainActivity.this,MainActivity.this);
         video_list.setAdapter(via);
     }
-
-
 
 
     private boolean checkPermission() {
@@ -130,46 +163,9 @@ public class MainActivity extends AppCompatActivity implements ClickListenner {
         }
     }
 
-
-    //Lee todos los videos de la memoria del celular
-
-    /*private void readAllVideos() {
-
-        HashSet<String> hashSet=new HashSet<>();
-        String[] projection={MediaStore.Video.VideoColumns.DATA, MediaStore.Video.Media.DISPLAY_NAME};
-        Cursor cursor= getContentResolver().query(MediaStore.Video.Media.EXTERNAL_CONTENT_URI,projection, null,null, null);
-        try{
-
-            if (cursor!=null){
-                cursor.moveToFirst();
-                do{
-                    hashSet.add(cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA)));
-                }while(cursor.moveToNext());
-
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        List<String> file_path=new ArrayList<>(hashSet);
-        List<VideoModel> vml=new ArrayList<>();
-
-        for (String data: file_path){
-            File file= new File(data);
-            ViewsAdapter.addView(data);
-            archivos.add(data);
-            vml.add(new VideoModel(file.getName(),file.getAbsolutePath()));
-        }
-        video_list.setLayoutManager(new LinearLayoutManager(MainActivity.this));
-
-        VideoItemAdapter videoItemAdapter= new VideoItemAdapter(vml,MainActivity.this,MainActivity.this);
-        video_list.setAdapter(videoItemAdapter);
-
-    }*/
-
-
     @Override
     public void onClickItem(String filePath) {
         startActivity(new Intent(MainActivity.this, ActividadDelReproductor.class).putExtra("Ruta del archivo",filePath));
-        ViewsAdapter.addView(filePath);
+        contVid.Addview(filePath);
     }
 }
