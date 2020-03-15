@@ -54,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements ClickListenner {
         contVid= new contenedorVideo();
         spinner= findViewById(R.id.cambiarVistas);
         SharedPreferences settings = getSharedPreferences("DatosVisitas", Context.MODE_PRIVATE);
+
         contVid.leerDatos(settings);
 
 
@@ -68,6 +69,7 @@ public class MainActivity extends AppCompatActivity implements ClickListenner {
             readVideos();
         }
         videoItemAdapter = new VideoItemAdapter(contVid,MainActivity.this,MainActivity.this);
+        video_list.setAdapter(videoItemAdapter);
 
 
 
@@ -99,10 +101,13 @@ public class MainActivity extends AppCompatActivity implements ClickListenner {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+
         SharedPreferences settings = getSharedPreferences("DatosVisitas", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = settings.edit();
         contVid.guardarDatos(editor);
         editor.commit();
+
+        System.out.println("DatosGuardados: "+settings.getAll().size());
     }
 
     private void readVideos(){
@@ -121,20 +126,22 @@ public class MainActivity extends AppCompatActivity implements ClickListenner {
         }
 
         video_list.setLayoutManager(new LinearLayoutManager(MainActivity.this));
+        contVid.readAllFiles(hashSet);
 
 
 
-        video_list.setAdapter(videoItemAdapter);
 
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void listadoPorVisitas() {
         videoItemAdapter.ordenarPorVistas();
+        video_list.setAdapter(videoItemAdapter);
     }
 
     private void listadoNormal(){
         videoItemAdapter.ordenarNormal();
+        video_list.setAdapter(videoItemAdapter);
     }
 
 

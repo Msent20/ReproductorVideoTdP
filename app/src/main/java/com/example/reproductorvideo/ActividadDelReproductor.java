@@ -51,9 +51,6 @@ public class ActividadDelReproductor extends AppCompatActivity {
         exoPlayer.prepare(videoSource);
         exoPlayer.setPlayWhenReady(true);
 
-
-
-
     }
 
     private void orientacionPantalla(String rutArh){
@@ -96,6 +93,7 @@ public class ActividadDelReproductor extends AppCompatActivity {
                 exoPlayer.release();
             }
         }
+
     }
 
     @Override
