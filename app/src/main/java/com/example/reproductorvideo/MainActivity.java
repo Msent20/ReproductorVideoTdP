@@ -100,6 +100,7 @@ public class MainActivity extends AppCompatActivity implements ClickListenner {
     }
 
 
+
     private void readVideos(){
         String[] projection={MediaStore.Video.VideoColumns.DATA, MediaStore.Video.Media.DISPLAY_NAME};
         Cursor cursor= getApplicationContext().getContentResolver().query(MediaStore.Video.Media.EXTERNAL_CONTENT_URI,projection, null,null, null);
