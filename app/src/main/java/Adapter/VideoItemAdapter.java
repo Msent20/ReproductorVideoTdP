@@ -34,9 +34,6 @@ public class VideoItemAdapter extends RecyclerView.Adapter {
     public VideoItemAdapter(contenedorVideo contenedor, Context contexto, ClickListenner clickListenner) {
         this.contenedor=contenedor;
         this.videoModelList = contenedor.ordenarNormal();
-
-        System.out.println("ACAAA AA A A  A A A A A  A A A: "+videoModelList.size());
-
         this.contexto = contexto;
         this.clickListenner = clickListenner;
     }

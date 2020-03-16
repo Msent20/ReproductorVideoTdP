@@ -62,15 +62,15 @@ public class MainActivity extends AppCompatActivity implements ClickListenner {
         //Si la version de andriod es mayor a la 6 pregunta por los permisos
         if(Build.VERSION.SDK_INT>=23){
             if(checkPermission()) {
-                readVideos();
+                cargarDatos();
             }else{
                 requestPermissions();
             }
         }else{
-            readVideos();
+            cargarDatos();
         }
-        videoItemAdapter = new VideoItemAdapter(contVid,MainActivity.this,MainActivity.this);
-        video_list.setAdapter(videoItemAdapter);
+        //videoItemAdapter = new VideoItemAdapter(contVid,MainActivity.this,MainActivity.this);
+        //video_list.setAdapter(videoItemAdapter);
 
 
 
@@ -82,11 +82,13 @@ public class MainActivity extends AppCompatActivity implements ClickListenner {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (spinner.getSelectedItem().toString().equals("Mas vistos")){
-                    listadoPorVisitas();
-                }else{
-                    if (spinner.getSelectedItem().toString().equals("Normal"))
-                        listadoNormal();
+                if (videoItemAdapter != null) {
+                    if (spinner.getSelectedItem().toString().equals("Mas vistos")) {
+                        listadoPorVisitas();
+                    } else {
+                        if (spinner.getSelectedItem().toString().equals("Normal"))
+                            listadoNormal();
+                    }
                 }
             }
 
@@ -135,6 +137,12 @@ public class MainActivity extends AppCompatActivity implements ClickListenner {
         video_list.setAdapter(videoItemAdapter);
     }
 
+    private void cargarDatos() {
+        readVideos();
+        videoItemAdapter = new VideoItemAdapter(contVid, MainActivity.this, MainActivity.this);
+        video_list.setAdapter(videoItemAdapter);
+    }
+
 
     private boolean checkPermission() {
         int result= ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
@@ -158,7 +166,7 @@ public class MainActivity extends AppCompatActivity implements ClickListenner {
         switch (requestCode){
             case PERMISSION_CODE:
                 if (grantResults.length>0 && grantResults[0]==PackageManager.PERMISSION_GRANTED){
-                    readVideos();
+                    cargarDatos();
                 }
         }
     }
