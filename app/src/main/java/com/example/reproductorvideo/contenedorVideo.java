@@ -29,17 +29,12 @@ public class contenedorVideo {
 
 
     //Lee todos los videos de la memoria del celular y retorna una lista con dichos videos.
-    public List<VideoModel> readAllFiles(HashSet<String> hashSet) {
+    public void readAllFiles(HashSet<String> hashSet) {
         List<String> file_path=new ArrayList<String>(hashSet);
-        List<VideoModel> vml=new ArrayList<VideoModel>();
 
         for (String data: file_path){
-            File file= new File(data);
-            viewsAdapter.addView(data);
             contenedor.add(data);
-            vml.add(new VideoModel(file.getName(),file.getAbsolutePath()));
         }
-        return vml;
     }
 
     //Ordena los videos de forma predeterminada, y retorna una lista con videomodels con dichos videos
@@ -74,6 +69,9 @@ public class contenedorVideo {
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void leerDatos(SharedPreferences datos){
         viewsAdapter.leerDatos(datos);
+    }
+    public int seeViews(String rutaArch) {
+        return viewsAdapter.seeViews(rutaArch);
     }
 
 

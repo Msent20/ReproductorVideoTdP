@@ -18,7 +18,7 @@ import java.util.Map;
 
 public class ViewsAdapter {
   private static Map<String, Integer> views;
-  private static final int CONST_ZERO = 0;
+  private static final int CONST_ZERO = 1;
   private static SharedPreferences datos;
 
   public ViewsAdapter(SharedPreferences datos){
@@ -35,16 +35,18 @@ public class ViewsAdapter {
       else
           views.put(rutaArch, CONST_ZERO);
 
+
       SharedPreferences.Editor da= datos.edit();
       da.putInt(rutaArch,views.get(rutaArch));
       da.commit();
+
   }
 
 
 
-  public static int seeViews(String rutaArch) throws Exception{
+  public int seeViews(String rutaArch){
       if(!views.containsKey(rutaArch))
-          throw new Exception("No video found with name: "+rutaArch.toString());
+          return 0;
       return views.get(rutaArch);
   }
 

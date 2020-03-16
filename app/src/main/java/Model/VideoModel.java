@@ -10,8 +10,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.reproductorvideo.R;
 
 public class VideoModel {
-    String fileName;
-    String filePath;
+    private String fileName;
+    private String filePath;
 
     public VideoModel(String fileName, String filePath) {
         this.fileName = fileName;

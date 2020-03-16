@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity implements ClickListenner {
 
 
         String[] opciones= {"Normal","Mas vistos"};
-        ArrayAdapter<String> adap= new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,opciones);
+        ArrayAdapter<String> adap= new ArrayAdapter<String>(this,R.layout.spinner_text,opciones);
         spinner.setAdapter(adap);
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -166,5 +166,6 @@ public class MainActivity extends AppCompatActivity implements ClickListenner {
     public void onClickItem(String filePath) {
         startActivity(new Intent(MainActivity.this, ActividadDelReproductor.class).putExtra("Ruta del archivo",filePath));
         contVid.Addview(filePath);
+        videoItemAdapter.notifyDataSetChanged();
     }
 }

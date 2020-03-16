@@ -27,13 +27,16 @@ import Interfaz.ClickListenner;
 import Model.VideoModel;
 
 public class VideoItemAdapter extends RecyclerView.Adapter {
-    contenedorVideo contenedor;
-    List<VideoModel> videoModelList;
-    Context contexto;
-    ClickListenner clickListenner;
+    private contenedorVideo contenedor;
+    private List<VideoModel> videoModelList;
+    private Context contexto;
+    private ClickListenner clickListenner;
     public VideoItemAdapter(contenedorVideo contenedor, Context contexto, ClickListenner clickListenner) {
         this.contenedor=contenedor;
         this.videoModelList = contenedor.ordenarNormal();
+
+        System.out.println("ACAAA AA A A  A A A A A  A A A: "+videoModelList.size());
+
         this.contexto = contexto;
         this.clickListenner = clickListenner;
     }
@@ -73,7 +76,7 @@ public class VideoItemAdapter extends RecyclerView.Adapter {
         videoHolder.filePath.setText(videoModel.getFilePath());
 
         try {
-            videoHolder.visitasVideo.setText("Visitas: "+ViewsAdapter.seeViews(videoModel.getFilePath()));
+            videoHolder.visitasVideo.setText("Visitas: "+contenedor.seeViews(videoModel.getFilePath()));
         } catch (Exception e) {
             e.printStackTrace();
         }
