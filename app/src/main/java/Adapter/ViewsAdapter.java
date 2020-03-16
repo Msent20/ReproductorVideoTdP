@@ -17,10 +17,14 @@ import java.util.Map;
 
 
 public class ViewsAdapter {
-  private static Map<String, Integer> views = new HashMap<String, Integer>();
+  private static Map<String, Integer> views;
   private static final int CONST_ZERO = 0;
+  private static SharedPreferences datos;
 
-
+  public ViewsAdapter(SharedPreferences datos){
+      views= new HashMap<String, Integer>();
+      this.datos=datos;
+  }
 
 
   public static void addView(String rutaArch){
@@ -30,7 +34,14 @@ public class ViewsAdapter {
       }
       else
           views.put(rutaArch, CONST_ZERO);
+
+      SharedPreferences.Editor da= datos.edit();
+      da.putInt(rutaArch,views.get(rutaArch));
+      da.commit();
   }
+
+
+
   public static int seeViews(String rutaArch) throws Exception{
       if(!views.containsKey(rutaArch))
           throw new Exception("No video found with name: "+rutaArch.toString());
@@ -52,12 +63,6 @@ public class ViewsAdapter {
       }
 
       return videosOrd;
-  }
-  // Guarda los datos de las visitas cuando se cierra la app
-  public void guardarDatos(SharedPreferences.Editor datos){
-      for(Map.Entry<String,Integer> ent:views.entrySet()) {
-          datos.putInt(ent.getKey(),ent.getValue());
-      }
   }
 
   //cuando se abre la aplicacion carga los datos de las visitas

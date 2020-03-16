@@ -19,10 +19,11 @@ import Model.VideoModel;
 public class contenedorVideo {
     private ArrayList<String> contenedor;
     private ViewsAdapter viewsAdapter;
-    private List<VideoModel> listaModel;
+    private SharedPreferences datos;
 
-    public contenedorVideo(){
-        viewsAdapter= new ViewsAdapter();
+    public contenedorVideo(SharedPreferences datos){
+        this.datos= datos;
+        viewsAdapter= new ViewsAdapter(datos);
         contenedor= new ArrayList<String>();
     }
 
@@ -69,9 +70,7 @@ public class contenedorVideo {
     public void Addview(String rutaArch) {
         viewsAdapter.addView(rutaArch);
     }
-    public void guardarDatos(SharedPreferences.Editor datos){
-        viewsAdapter.guardarDatos(datos);
-    }
+
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void leerDatos(SharedPreferences datos){
         viewsAdapter.leerDatos(datos);

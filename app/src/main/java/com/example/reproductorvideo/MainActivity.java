@@ -51,9 +51,10 @@ public class MainActivity extends AppCompatActivity implements ClickListenner {
         setContentView(R.layout.activity_main);
         getSupportActionBar().hide();
         video_list= findViewById(R.id.video_list);
-        contVid= new contenedorVideo();
-        spinner= findViewById(R.id.cambiarVistas);
         SharedPreferences settings = getSharedPreferences("DatosVisitas", Context.MODE_PRIVATE);
+        contVid= new contenedorVideo(settings);
+        spinner= findViewById(R.id.cambiarVistas);
+
 
         contVid.leerDatos(settings);
 
@@ -98,17 +99,6 @@ public class MainActivity extends AppCompatActivity implements ClickListenner {
 
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-        SharedPreferences settings = getSharedPreferences("DatosVisitas", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = settings.edit();
-        contVid.guardarDatos(editor);
-        editor.commit();
-
-        System.out.println("DatosGuardados: "+settings.getAll().size());
-    }
 
     private void readVideos(){
         String[] projection={MediaStore.Video.VideoColumns.DATA, MediaStore.Video.Media.DISPLAY_NAME};
